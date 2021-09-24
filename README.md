@@ -18,6 +18,7 @@ Quick example: `evaluate("user.firstName === firstNames[0]", { user: { firstName
 - Float (ex: `5.5`, ...)
 - String (ex: `'hello'` or `"hello"` -- no backtick (``) syntax yet)
 
+
 ## Unary Operators
 
 - `!expression` (ex: `!true`, `!variable`, `!(expression && expression)`, ...)
@@ -35,7 +36,7 @@ Quick example: `evaluate("user.firstName === firstNames[0]", { user: { firstName
 - `>=`
 - `<`
 - `<=`
-<br />
+
 
 ## Logical Operators
 - `&&`
@@ -72,6 +73,7 @@ evaluate(expression: string, context: { [key: string]: any }) => boolean
 ```ts
 parse(expression: string) => Evaluatable | string | boolean | number
 ```
+
 
 ## Examples
 
@@ -115,6 +117,7 @@ If you change the grammar, you need to rebuild it. You can do so using:
 npm run build:grammar
 ```
 
+
 ## Test
 
 I have a comprehensive list of tests but I still would like to add more. To run current tests you can use:
@@ -124,6 +127,7 @@ npm run test
 ```
 
 This will not build the grammar before running. If grammar is changed, it needs to be rebuilt using `npm run build:grammar`.
+
 
 ## Coverage
 

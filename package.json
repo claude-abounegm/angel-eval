@@ -1,6 +1,6 @@
 {
   "name": "eval-angel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A conditional expression parser and interpreter.",
   "main": "dist/index.js",
   "repository": {
