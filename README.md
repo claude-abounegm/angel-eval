@@ -131,7 +131,7 @@ This will not build the grammar before running. If grammar is changed, it needs 
 
 ## Coverage
 
-This project has 92% unit tests coverage. I will be adding more tests to have full coverage soon. 
+This project has 100% coverage. If you find the need to add more tests, contributions are greatly appreciated. Thanks!
 
 
 ## Contributions

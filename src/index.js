@@ -1,4 +1,5 @@
 const memoize = require("lodash/memoize");
+const isString = require("lodash/isString");
 const isBoolean = require("lodash/isBoolean");
 const { Grammar, Parser } = require("nearley");
 
@@ -16,12 +17,14 @@ function createParser() {
  * @returns {Evaluatable | boolean | string | number}
  */
 const _parse = (expression) => {
+  if (!isString(expression) || expression.length === 0) {
+    throw new Error("expression needs to be a non-empty string");
+  }
+
   const parser = createParser();
 
   try {
-    if (expression) {
-      parser.feed(expression);
-    }
+    parser.feed(expression);
 
     const [node] = parser.results;
 

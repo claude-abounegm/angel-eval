@@ -145,6 +145,36 @@ describe("evaluate()", function () {
     );
   });
 
+  it("should work with unary not", function () {
+    evaluateAssert("!true", {}, false);
+    evaluateAssert("!false", {}, true);
+    evaluateAssert("!var", { var: false }, true);
+  });
+
+  it("should work with a single literal", function () {
+    evaluateAssert("1", null, true);
+  });
+
+  it("should work with a null value for context", function () {
+    evaluateAssert("x", { x: true }, true);
+  });
+
+  it("should throw a correct error message", function () {
+    try {
+      evaluateAssert("cf * 4", {});
+      throw new ShouldNotBeReachedError();
+    } catch (e) {
+      expect(e.message).to.include("Syntax error");
+    }
+  });
+
+  it("should not parse on empty string or non-string", function () {
+    try {
+      evaluateAssert();
+      throw new ShouldNotBeReachedError();
+    } catch (e) {}
+  });
+
   // it("should work with expressions", function () {
   //   evaluateAssert(
   //     "`${x}` === 'world'",
