@@ -1,11 +1,20 @@
 {
   "name": "eval-angel",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A conditional expression parser and interpreter.",
   "main": "dist/index.js",
   "repository": {
     "url": "git@github.com:claude-abounegm/eval-angel.git"
   },
+  "keywords": [
+    "conditional",
+    "expression",
+    "javascript",
+    "nearley",
+    "eval",
+    "no-eval",
+    "module"
+  ],
   "scripts": {
     "test": "nyc mocha --require @babel/register",
     "build": "npm run build:grammar && npm run build:app",

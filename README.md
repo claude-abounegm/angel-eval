@@ -21,14 +21,14 @@ Quick example: `evaluate("user.firstName === firstNames[0]", { user: { firstName
 ## Unary Operators
 
 - `!expression` (ex: `!true`, `!variable`, `!(expression && expression)`, ...)
-<br />
+
 
 ## Equality Operators
 - `===` (ex: `5 === 5`, `var === 5`, ...)
 - `!==` (ex: `var !== false`, ...)
 
 `==` and `!=` are not supported because they are usually bad practice.
-<br />
+
 
 ## Relational Operators
 - `>`
