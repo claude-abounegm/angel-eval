@@ -1,5 +1,7 @@
 # eval-angel
 
+![Logo](https://raw.githubusercontent.com/claude-abounegm/eval-angel/main/docs/logo.png)
+
 A conditional expression parser and interpreter. This is a safe way to evaluate boolean/logical expressions without using [evil `eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!).
 
 The expressions follow the JavaScript syntax. You can check the comprehensive tests for examples on functionality. Variables are evaluated at a later stage when `evaluate()` function is called with a `context` object. The `context` provides an object with the variables to evaluate. 
