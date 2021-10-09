@@ -1,6 +1,6 @@
-# eval-angel
+# angel-eval
 
-![Logo](https://raw.githubusercontent.com/claude-abounegm/eval-angel/main/docs/logo.png)
+![Logo](https://raw.githubusercontent.com/claude-abounegm/angel-eval/main/docs/logo.png)
 
 A conditional expression parser and interpreter. This is a safe way to evaluate boolean/logical expressions without using [evil `eval`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#never_use_eval!).
 
@@ -11,7 +11,7 @@ Quick example: `evaluate("user.firstName === firstNames[0]", { user: { firstName
 
 ## Installation
 
-`npm i eval-angel`
+`npm i angel-eval`
 
 
 ## Supported Types
@@ -80,7 +80,7 @@ parse(expression: string) => Evaluatable | string | boolean | number
 ## Examples
 
 ```js
-const { evaluate } = require("eval-angel");
+const { evaluate } = require("angel-eval");
 
 evaluate("foo.x !== y", { foo: { x: 5 }, y: 5 }); // false
 evaluate('gender === "female"', { gender: "female" }); // true
@@ -104,7 +104,7 @@ Expression are parsed once and are memoized so that consequent operations would 
 
 Some can say that using [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function) may be safer than `eval`, but to me both are equally dangerous since they have access to the JavaScript interpreter and `Function` can still see global variables and modify app state.
 
-`eval-angel`'s method is safe because no `eval()` is actually happening. Expressions cannot access any variables not specified in the `context` object. The expression is either parsed correctly and interpreted as needed, or it will fail. No additional code can be run through this and no changes to your app can actually happen. 
+`angel-eval`'s method is safe because no `eval()` is actually happening. Expressions cannot access any variables not specified in the `context` object. The expression is either parsed correctly and interpreted as needed, or it will fail. No additional code can be run through this and no changes to your app can actually happen. 
 
 `lodash` does come with vulnerabilities sometimes and this package uses both `_.get` and `_.memoize`, so later on it might be worth moving away from lodash (sorry lo, I still love you).
 
