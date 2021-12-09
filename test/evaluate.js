@@ -1,7 +1,7 @@
-const { expect } = require("chai");
-const { evaluate } = require("../src");
-const Evaluatable = require("../src/Evaluatable");
-const ShouldNotBeReachedError = require("./ShouldNotBeReachedError");
+import { expect } from "chai";
+import { evaluate } from "../src";
+import Evaluatable from "../src/Evaluatable";
+import ShouldNotBeReachedError from "./ShouldNotBeReachedError";
 
 function evaluateAssert(expression, context, expected) {
   const evaluated = evaluate(expression, context);
@@ -95,6 +95,10 @@ describe("evaluate()", function () {
 
   it("should return result for () not boolean", function () {
     evaluateAssert("(x || y) === 'world\\''", { x: false, y: "world'" }, true);
+  });
+
+  it("should parse floats with e^x", function () {
+    evaluateAssert("float === 1.2e3", { float: 1.2e3 }, true);
   });
 
   it("should parse null", function () {

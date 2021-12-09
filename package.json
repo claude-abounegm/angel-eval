@@ -1,6 +1,6 @@
 {
   "name": "angel-eval",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A conditional expression parser and interpreter.",
   "main": "dist/index.js",
   "repository": {
@@ -16,17 +16,17 @@
     "module"
   ],
   "scripts": {
-    "test": "nyc mocha --require @babel/register",
-    "build": "npm run build:grammar && npm run build:app",
+    "test": "npm run build && nyc mocha --require @babel/register",
+    "build": "bash ./bin/build.sh",
     "build:app": "rm -Rf dist && babel src --out-dir dist --copy-files",
-    "build:grammar": "nearleyc ./grammar.ne -o ./src/compiledGrammar.js",
+    "build:grammar": "nearleyc ./grammar.ne -o ./src/grammar.js",
     "prepublish": "npm run build"
   },
   "author": "Claude Abounegm <claude.abounegm@gmail.com>",
   "license": "MIT",
   "nyc": {
     "include": "src",
-    "exclude": "src/compiledGrammar.js"
+    "exclude": "src/grammar.js"
   },
   "dependencies": {
     "lodash": "^4.17.21",

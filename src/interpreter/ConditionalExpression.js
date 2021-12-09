@@ -1,20 +1,20 @@
-const Evaluatable = require("./Evaluatable");
-const { evaluateNode } = require("./utils");
+import Evaluatable from "../Evaluatable";
+import { evaluateNode } from "../utils";
 
-class Conditional extends Evaluatable {
-  constructor(left, right, op) {
+class ConditionalExpression extends Evaluatable {
+  constructor(leftNode, rightNode, operator) {
     super();
 
-    this.left = left;
-    this.right = right;
-    this.op = op;
+    this.leftNode = leftNode;
+    this.rightNode = rightNode;
+    this.operator = operator;
   }
 
   evaluate(context) {
-    const left = evaluateNode(this.left, context);
-    const right = evaluateNode(this.right, context);
+    const left = evaluateNode(this.leftNode, context);
+    const right = evaluateNode(this.rightNode, context);
 
-    switch (this.op) {
+    switch (this.operator) {
       // case "==":
       //   return left == right;
 
@@ -46,8 +46,8 @@ class Conditional extends Evaluatable {
         return left || right;
     }
 
-    throw new Error(this.op + " not implemented");
+    throw new Error(this.operator + " not implemented");
   }
 }
 
-module.exports = Conditional;
+export default ConditionalExpression;

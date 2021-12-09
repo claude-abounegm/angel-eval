@@ -25,9 +25,13 @@ function $(o) {
 }
 
 
-const Variable = require('./Variable');
-const Conditional = require('./Conditional');
-const Negation = require('./Negation');
+const Variable = require('./interpreter/Variable').default;
+const ConditionalExpression = require('./interpreter/ConditionalExpression').default;
+const NegationExpression = require('./interpreter/NegationExpression').default;
+const BooleanConstant = require('./interpreter/BooleanConstant').default;
+const NullConstant = require('./interpreter/NullConstant').default;
+const NumberConstant = require('./interpreter/NumberConstant').default;
+const StringConstant = require('./interpreter/StringConstant').default;
 
 const arrayify = item => Array.isArray(item) ? item : [item];
 const joinFirst =
@@ -40,7 +44,7 @@ const joinAll =
   (items) =>
     items.join(seperator);
 
-const toConditional = (items) => new Conditional(items[0], items[4], items[2]);
+const toConditionalExpression = (items) => new ConditionalExpression(items[0], items[4], items[2]);
 var grammar = {
     Lexer: undefined,
     ParserRules: [
@@ -158,43 +162,49 @@ var grammar = {
     {"name": "main", "symbols": ["expression"], "postprocess": id},
     {"name": "expression", "symbols": ["booleanExpression"], "postprocess": id},
     {"name": "booleanExpression", "symbols": ["equalityExpression"], "postprocess": id},
-    {"name": "booleanExpression", "symbols": ["equalityExpression", "_", "booleanOperator", "_", "booleanExpression"], "postprocess": toConditional},
+    {"name": "booleanExpression", "symbols": ["equalityExpression", "_", "booleanOperator", "_", "booleanExpression"], "postprocess": toConditionalExpression},
     {"name": "booleanOperator$string$1", "symbols": [{"literal":"&"}, {"literal":"&"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "booleanOperator", "symbols": ["booleanOperator$string$1"], "postprocess": id},
     {"name": "booleanOperator$string$2", "symbols": [{"literal":"|"}, {"literal":"|"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "booleanOperator", "symbols": ["booleanOperator$string$2"], "postprocess": id},
     {"name": "equalityExpression", "symbols": ["relationalExpression"], "postprocess": id},
-    {"name": "equalityExpression", "symbols": ["relationalExpression", "_", "equalityOperator", "_", "equalityExpression"], "postprocess": toConditional},
+    {"name": "equalityExpression", "symbols": ["relationalExpression", "_", "equalityOperator", "_", "equalityExpression"], "postprocess": toConditionalExpression},
     {"name": "equalityOperator$string$1", "symbols": [{"literal":"="}, {"literal":"="}, {"literal":"="}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "equalityOperator", "symbols": ["equalityOperator$string$1"], "postprocess": id},
     {"name": "equalityOperator$string$2", "symbols": [{"literal":"!"}, {"literal":"="}, {"literal":"="}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "equalityOperator", "symbols": ["equalityOperator$string$2"], "postprocess": id},
     {"name": "relationalExpression", "symbols": ["unaryExpression"], "postprocess": id},
-    {"name": "relationalExpression", "symbols": ["unaryExpression", "_", "relationalOperator", "_", "relationalExpression"], "postprocess": toConditional},
+    {"name": "relationalExpression", "symbols": ["unaryExpression", "_", "relationalOperator", "_", "relationalExpression"], "postprocess": toConditionalExpression},
     {"name": "relationalOperator$string$1", "symbols": [{"literal":">"}, {"literal":"="}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "relationalOperator", "symbols": ["relationalOperator$string$1"], "postprocess": id},
     {"name": "relationalOperator", "symbols": [{"literal":">"}], "postprocess": id},
     {"name": "relationalOperator", "symbols": [{"literal":"<"}], "postprocess": id},
     {"name": "relationalOperator$string$2", "symbols": [{"literal":"<"}, {"literal":"="}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "relationalOperator", "symbols": ["relationalOperator$string$2"], "postprocess": id},
-    {"name": "unaryExpression", "symbols": ["variablePath"], "postprocess": ([node]) => Variable.parse(node)},
-    {"name": "unaryExpression", "symbols": ["floatLiteral"], "postprocess": id},
-    {"name": "unaryExpression", "symbols": ["intLiteral"], "postprocess": id},
-    {"name": "unaryExpression", "symbols": ["stringLiteral"], "postprocess": id},
-    {"name": "unaryExpression", "symbols": [{"literal":"!"}, "_", "expression"], "postprocess": d => new Negation(d[2])},
+    {"name": "unaryExpression", "symbols": ["boolean"], "postprocess": ([value]) => new BooleanConstant(value)},
+    {"name": "unaryExpression", "symbols": ["nullLiteral"], "postprocess": ([value]) => new NullConstant(value)},
+    {"name": "unaryExpression", "symbols": ["number"], "postprocess": ([value]) => new NumberConstant(value)},
+    {"name": "unaryExpression", "symbols": ["string"], "postprocess": ([value]) => new StringConstant(value)},
+    {"name": "unaryExpression", "symbols": ["variablePath"], "postprocess": ([path]) => new Variable(path)},
+    {"name": "unaryExpression", "symbols": [{"literal":"!"}, "_", "expression"], "postprocess": ([,,node]) => new NegationExpression(node)},
     {"name": "unaryExpression", "symbols": [{"literal":"("}, "_", "expression", "_", {"literal":")"}], "postprocess": d => d[2]},
     {"name": "variablePath", "symbols": ["variable"], "postprocess": id},
     {"name": "variablePath", "symbols": ["variablePath", "_", {"literal":"."}, "_", "variableAfterDot"], "postprocess": d => [...arrayify(d[0]), d[4]]},
-    {"name": "variablePath", "symbols": ["variablePath", {"literal":"["}, "_", "expression", "_", {"literal":"]"}], "postprocess": d => [...arrayify(d[0]), d[3]]},
+    {"name": "variablePath", "symbols": ["variablePath", "_", {"literal":"["}, "_", "expression", "_", {"literal":"]"}], "postprocess": d => [...arrayify(d[0]), d[4]]},
     {"name": "variable", "symbols": ["variableFirstLetter", "variableAfterDot"], "postprocess": joinAll()},
     {"name": "variableFirstLetter", "symbols": [/[a-zA-Z_]/], "postprocess": id},
     {"name": "variableAfterDot$ebnf$1", "symbols": []},
     {"name": "variableAfterDot$ebnf$1", "symbols": ["variableAfterDot$ebnf$1", /[a-zA-Z0-9_]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "variableAfterDot", "symbols": ["variableAfterDot$ebnf$1"], "postprocess": joinFirst()},
-    {"name": "floatLiteral", "symbols": ["decimal"], "postprocess": id},
-    {"name": "intLiteral", "symbols": ["int"], "postprocess": id},
-    {"name": "stringLiteral", "symbols": ["dqstring"], "postprocess": id},
-    {"name": "stringLiteral", "symbols": ["sqstring"], "postprocess": id},
+    {"name": "variableAfterDot", "symbols": ["variableAfterDot$ebnf$1"], "postprocess": joinFirst('')},
+    {"name": "nullLiteral$string$1", "symbols": [{"literal":"n"}, {"literal":"u"}, {"literal":"l"}, {"literal":"l"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "nullLiteral", "symbols": ["nullLiteral$string$1"], "postprocess": _ => null},
+    {"name": "boolean$string$1", "symbols": [{"literal":"t"}, {"literal":"r"}, {"literal":"u"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "boolean", "symbols": ["boolean$string$1"], "postprocess": _ => true},
+    {"name": "boolean$string$2", "symbols": [{"literal":"f"}, {"literal":"a"}, {"literal":"l"}, {"literal":"s"}, {"literal":"e"}], "postprocess": function joiner(d) {return d.join('');}},
+    {"name": "boolean", "symbols": ["boolean$string$2"], "postprocess": _ => false},
+    {"name": "number", "symbols": ["jsonfloat"], "postprocess": id},
+    {"name": "string", "symbols": ["dqstring"], "postprocess": id},
+    {"name": "string", "symbols": ["sqstring"], "postprocess": id},
     {"name": "_$ebnf$1", "symbols": []},
     {"name": "_$ebnf$1", "symbols": ["_$ebnf$1", /[\s]/], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "_", "symbols": ["_$ebnf$1"], "postprocess": () => null}

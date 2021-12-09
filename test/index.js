@@ -1,11 +1,10 @@
-const Conditional = require("../src/Conditional");
-const ShouldNotBeReachedError = require("./ShouldNotBeReachedError");
+import ConditionalExpression from "../src/interpreter/ConditionalExpression";
+import ShouldNotBeReachedError from "./ShouldNotBeReachedError";
+import "./evaluate";
 
-require("./evaluate");
-
-describe("Conditional", function () {
+describe("ConditionalExpression", function () {
   it("should throw on invalid op", function () {
-    const cond = new Conditional("", "", "^^");
+    const cond = new ConditionalExpression("", "", "^^");
 
     try {
       cond.evaluate();
@@ -16,4 +15,6 @@ describe("Conditional", function () {
       }
     }
   });
+
+  // it('should always return ')
 });

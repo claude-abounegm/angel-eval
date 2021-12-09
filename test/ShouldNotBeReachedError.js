@@ -1,3 +1,3 @@
 class ShouldNotBeReachedError extends Error {}
 
-module.exports = ShouldNotBeReachedError;
+export default ShouldNotBeReachedError;

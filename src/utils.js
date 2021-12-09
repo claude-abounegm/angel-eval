@@ -1,6 +1,6 @@
-const Evaluatable = require("./Evaluatable");
+import Evaluatable from "./Evaluatable";
 
-function evaluateNode(node, context) {
+export function evaluateNode(node, context) {
   if (node instanceof Evaluatable) {
     return node.evaluate(context);
   }
@@ -8,6 +8,6 @@ function evaluateNode(node, context) {
   return node;
 }
 
-module.exports = {
+export default {
   evaluateNode,
 };
